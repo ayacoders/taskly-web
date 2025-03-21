@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+    /* Font */
+    --font-sans: 'Poppins', sans-serif;
+
+    /* Colors */
+
+    /* 60% - Soft Background (Vue-Inspired) */
+    --color-primary: hsl(160, 25%, 95%);
+
+    /* Container Background */
+    --color-container: hsl(160, 20%, 98%);
+
+    /* 30% - Muted Green */
+    --color-secondary: hsl(160, 40%, 50%);
+
+    /* 10% - Vue Green */
+    --color-accent: hsl(160, 80%, 40%);
+
+    /* Text Colors */
+    --color-textprimary: hsl(200, 20%, 20%);
+    --color-textsecondary: hsl(200, 15%, 40%);
+
+    /* Breakpoints */
+    --breakpoint-xs: 480px;  /* Extra Small */
+    --breakpoint-sm: 640px;  /* Small */
+    --breakpoint-md: 768px;  /* Medium */
+    --breakpoint-lg: 1024px; /* Large */
+    --breakpoint-xl: 1280px; /* Extra Large */
+    --breakpoint-2xl: 1536px; /* 2X Large */
+
+    /* Overrides */
+    --ui-text: var(--color-text-primary);
+}
