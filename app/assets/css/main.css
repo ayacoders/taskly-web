@@ -3,25 +3,24 @@
 
 @theme {
     /* Font */
-    --font-sans: 'Poppins', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 
     /* Colors */
-
-    /* 60% - Soft Background (Vue-Inspired) */
-    --color-primary: hsl(160, 25%, 95%);
+    /* 60% - Light Background */
+    --color-primary: hsl(0, 0%, 98%);
 
     /* Container Background */
-    --color-container: hsl(160, 20%, 98%);
+    --color-container: hsl(0, 0%, 100%);
 
-    /* 30% - Muted Green */
-    --color-secondary: hsl(160, 40%, 50%);
+    /* 30% - Medium Gray */
+    --color-secondary: hsl(0, 0%, 60%);
 
-    /* 10% - Vue Green */
-    --color-accent: hsl(160, 80%, 40%);
+    /* 10% - Dark Gray */
+    --color-accent: hsl(207, 78%, 43%);
 
     /* Text Colors */
-    --color-textprimary: hsl(200, 20%, 20%);
-    --color-textsecondary: hsl(200, 15%, 40%);
+    --color-textprimary: hsl(0, 0%, 20%);
+    --color-textsecondary: hsl(0, 0%, 45%);
 
     /* Breakpoints */
     --breakpoint-xs: 480px;  /* Extra Small */
@@ -33,4 +32,42 @@
 
     /* Overrides */
     --ui-text: var(--color-text-primary);
+}
+
+/* Base Text Colors */
+body {
+    color: var(--color-textprimary);
+    background-color: var(--color-primary);
+}
+
+
+/* Custom Monochrome Styles */
+.dark {
+    --color-primary: hsl(0, 0%, 10%);
+    --color-container: hsl(0, 0%, 15%);
+    --color-secondary: hsl(0, 0%, 40%);
+    --color-accent: hsl(207, 97%, 39%);
+    --color-textprimary: hsl(0, 0%, 90%);
+    --color-textsecondary: hsl(0, 0%, 70%);
+}
+
+/* Smooth Transitions */
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Color Mode Specific Styles */
+html {
+    @apply antialiased;
+}
+
+html.dark {
+    color-scheme: dark;
+}
+
+html.light {
+    color-scheme: light;
 }

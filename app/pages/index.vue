@@ -2,10 +2,15 @@
 definePageMeta({
   layout: "default",
 });
+
+
+onBeforeMount(() => {
+  navigateTo('/login');
+});
 </script>
 
 <template>
-  <UContainer class="">
-    <h1></h1>
-  </UContainer>
+  <div class="flex items-center justify-center min-h-screen">
+    <ULoadingBar />
+  </div>
 </template>

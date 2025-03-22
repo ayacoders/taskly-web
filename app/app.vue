@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-  title: 'taSKly',
+  title: 'TaSKly',
   meta: [
     { name: 'description', content: 'A simple and efficient to-do app for managing tasks.' }
   ]
