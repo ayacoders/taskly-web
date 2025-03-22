@@ -1,13 +1,3 @@
-<!-- 
-JSON DATA SHAPE
-{
-    "title": "Omnis explicabo eius praesentium et reiciendis eos.",
-    "description": "Officiis voluptatem consequuntur quia unde inventore optio",
-    "due_date": "2024-08-10 08:23:40",
-    "priority": "high", 
-}
--->
-
 <script setup>
 
 defineProps({
