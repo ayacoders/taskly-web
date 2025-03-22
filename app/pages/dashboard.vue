@@ -3,23 +3,20 @@ definePageMeta({
     layout: 'default'
 })
 
-import { test_data } from '../data/dummy';
+import { useTaskStore } from '../stores/taskStore'
 import { useTaskFiltersStore } from '../stores/taskFilters'
 
-const tasks = ref(test_data)
+const taskStore = useTaskStore()
 const taskFilters = useTaskFiltersStore()
 const isMasonryLayout = ref(false)
 
-const updateTask = (updatedTask) => {
-    const index = tasks.value.findIndex(task => task.id === updatedTask.id)
-    if (index !== -1) {
-        tasks.value[index] = updatedTask
-    }
-}
-
 const filteredTasks = computed(() => {
-    return taskFilters.filterTasks(tasks.value)
+    return taskFilters.filterTasks(taskStore.getAllTasks)
 })
+
+const updateTask = (updatedTask) => {
+    taskStore.updateTask(updatedTask)
+}
 
 const toggleLayout = () => {
     isMasonryLayout.value = !isMasonryLayout.value
@@ -54,9 +51,12 @@ const toggleLayout = () => {
                         title="Add Task"
                         description="Add a new task to your list"
                     >
-                        <UButton>Add Task</UButton>
+                        <UButton @click="isModalOpen = true">Add Task</UButton>
                         <template #body class="w-full">
-                            <TaskForm action="add"/>
+                            <TaskForm 
+                                action="add"
+                                @submit="handleAddTaskComplete"
+                            />
                         </template>
                     </UModal>
                 </div>
@@ -106,6 +106,7 @@ const toggleLayout = () => {
                 <div v-for="task in filteredTasks" 
                     :key="task.id"
                     class="task-item h-full"
+                    :class="{ 'opacity-50 grayscale': task.status }"
                 >
                     <TaskItem 
                         :task="task" 
@@ -153,6 +154,11 @@ const toggleLayout = () => {
 .task-list-leave-to {
     opacity: 0;
     transform: translateY(30px);
+}
+
+/* Add this new style */
+.task-item.opacity-50 {
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
 }
 </style>
 

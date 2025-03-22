@@ -9,7 +9,7 @@ const items = [
     {
         label: 'Logout',
         icon: 'i-heroicons-arrow-right-on-rectangle',
-        to: '/logout' // TODO: Add logout route
+        to: '/login' // TODO: Add logout route
     },
     {
         label: 'Reset Password',

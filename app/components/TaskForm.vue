@@ -1,4 +1,7 @@
 <script setup>
+import { useTaskStore } from '../stores/taskStore'
+
+const taskStore = useTaskStore()
 
 defineProps({
     action: {
@@ -11,8 +14,8 @@ defineProps({
     },
 })
 
+const emit = defineEmits(['submit', 'close'])
 const toast = useToast()
-
 const priorityItems = ref(['Low', 'Medium', 'High'])
 
 const state = reactive({
@@ -22,18 +25,34 @@ const state = reactive({
     priority: '',
 })
 
-
 const handleSubmit = () => {
     try {
-        taskSchema.parse(state);
-
+        taskSchema.parse(state)
+        
+        // Use the store to add task
+        taskStore.addTask(state)
+        
         toast.add({
             title: 'Success',
             description: 'Task created successfully',
             color: 'success',
         })
+
+        emit('submit')
+        
+        Object.assign(state, {
+            title: '',
+            description: '',
+            due_date: '',
+            priority: '',
+        })
     } catch (error) {
         console.error(error)
+        toast.add({
+            title: 'Error',
+            description: error.message,
+            color: 'error',
+        })
     }
 }
 </script>
