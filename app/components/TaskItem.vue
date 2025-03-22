@@ -17,7 +17,7 @@ const toggleStatus = () => {
 </script>
 
 <template>
-    <div v-if="task.status" class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all duration-300 h-full flex flex-col">
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all duration-300 h-full flex flex-col">
         <!-- Header -->
         <div class="p-3 sm:p-4 flex-shrink-0">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
