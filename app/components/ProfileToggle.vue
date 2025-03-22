@@ -10,6 +10,11 @@ const items = [
         label: 'Logout',
         icon: 'i-heroicons-arrow-right-on-rectangle',
         to: '/logout' // TODO: Add logout route
+    },
+    {
+        label: 'Reset Password',
+        icon: 'i-heroicons-arrow-path',
+        to: '/reset'
     }
 ]
 </script>
