@@ -13,3 +13,11 @@ export const registerSchema = z.object({
     message: "Passwords don't match",
     path: ["confirmPassword"],
 });
+
+export const taskSchema = z.object({
+    title: z.string().min(1, 'Title is required'),
+    description: z.string().min(1, 'Description is required'),
+    due_date: z.string().min(1, 'Due date is required'),
+    priority: z.string().min(1, 'Priority is required'),
+});
+

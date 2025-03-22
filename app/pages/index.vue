@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 
-onBeforeMount(() => {
+onMounted(() => {
   navigateTo('/login');
 });
 </script>

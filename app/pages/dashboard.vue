@@ -1,3 +1,5 @@
 <template>
-    <h1>Nigger Dashboard</h1>
+    <div>
+        <h1>Dashboard</h1>
+    </div>
 </template>
