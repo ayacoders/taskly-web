@@ -40,6 +40,10 @@ body {
     background-color: var(--color-primary);
 }
 
+button {
+    cursor: pointer;
+}
+
 
 /* Custom Monochrome Styles */
 .dark {
