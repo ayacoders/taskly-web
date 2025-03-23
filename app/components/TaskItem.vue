@@ -9,8 +9,8 @@ const props = defineProps({
 const emit = defineEmits(['update:task'])
 const taskStore = useTaskStore()
 const config = useRuntimeConfig()
-const toast = useToast()
 const token = ref("");
+const toast = useToast()
 
 if (process.client) {
     token.value = localStorage.getItem('token')

@@ -46,6 +46,7 @@ const handleSubmit = async (token) => {
         if (props.action !== "add") {
             method = 'put'
             url = `/api/tasks/${props.task.id}`
+            console.log("id: ", props.task.id)
         } 
 
         const { data } = useFetch(`${config.public.apiBase}${url}`, {
@@ -69,7 +70,11 @@ const handleSubmit = async (token) => {
         } 
         
         if(props.action === 'add'){
-            taskStore.addTask(state)
+            console.log("data", JSON.stringify(data.value, null, 2))
+            taskStore.addTask({
+                ...state, 
+                id: data.value.id
+            })
         } else {
             taskStore.updateTask(
                 {   

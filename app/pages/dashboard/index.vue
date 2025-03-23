@@ -24,6 +24,10 @@ const handleEmitSubmit = () => {
 
 onMounted(async () => {
     try {
+        if (!token.value) {
+            navigateTo('/login')
+	    }
+
         const { tasks } = await $fetch(`${config.public.apiBase}/api/tasks`, {
             headers: {
                 Authorization: `Bearer ${token.value}`,

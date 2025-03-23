@@ -19,5 +19,4 @@ import { useRoute } from 'nuxt/app'
 
 const route = useRoute()
 const isDashboard = computed(() => route.path === '/dashboard' || route.path === '/dashboard/reset')
-
 </script>
