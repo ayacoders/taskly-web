@@ -2,25 +2,37 @@
 import { registerSchema } from '~/utils/validation'
 
 const state = reactive({
+  name: '',
   email: '',
   password: '',
   confirmPassword: ''
 })
 
+
+const config = useRuntimeConfig()
 const toast = useToast()
 
 async function onSubmit(event) {
   try {
     const validatedData = registerSchema.parse(state)
+    
+    const res = await $fetch(`${config.public.apiBase}/api/register`, {
+      method: 'post',
+      body: {
+        name: validatedData.name,
+        email: validatedData.email,
+        password: validatedData.password        
+      }
+    });
 
-    toast.add({
-      title: 'Success',
-      description: 'Registration successful',
-      color: 'success',
-      data: validatedData
-    })
-
-    navigateTo('/dashboard')
+   if (res.token) {
+        toast.add({
+        title: 'Success',
+        description: 'Registration successful',
+        color: 'success',
+        data: validatedData
+      })
+    }
   } catch (error) {
     if (error.errors) {
       error.errors.forEach((err) => {
@@ -31,8 +43,29 @@ async function onSubmit(event) {
         })
       })
     }
+  } 
+}
+
+
+async function handleEmailVerif() {
+  try {
+    const res = await $fetch(`${config.public.apiBase}/api/email/send-verification-link`, {
+      method: 'post',
+      body: state.email
+    })
+
+    toast.add({
+      title: res.message
+    })
+
+    navigateTo('/login')
+  } catch (err) {
+    toast.add({
+      title: "Failed to Verify Email"
+    })
   }
 }
+
 </script>
 
 <template>
@@ -41,13 +74,17 @@ async function onSubmit(event) {
     <p class="xs:text-sm md:text-base">Create your account to get started</p>
 
     <span class="text-sm text-secondary mt-2">
-        Already have an account?
-        <NuxtLink to="/login" class="text-secondary underline">
-          Login
-        </NuxtLink>
-      </span>
+      Already have an account?
+      <NuxtLink to="/login" class="text-secondary underline">
+        Login
+      </NuxtLink>
+    </span>
 
     <UForm :schema="registerSchema" :state="state" class="space-y-4 mt-4 md:w-96" @submit.prevent="onSubmit">
+      <UFormField label="Name" name="name">
+        <UInput v-model="state.name" size="lg" class="w-full" />
+      </UFormField>
+
       <UFormField label="Email" name="email">
         <UInput v-model="state.email" size="lg" class="w-full" />
       </UFormField>
@@ -61,9 +98,26 @@ async function onSubmit(event) {
       </UFormField>
 
       <div class="flex justify-end items-center">
-        <UButton type="submit" class="bg-blue-500 text-white hover:bg-blue-600 hover:cursor-pointer">
-          Register
-        </UButton>
+        <UModal title="Verify Email">
+          <UButton type="submit" class="bg-accent text-white hover:bg-accent-dark">
+            Register
+          </UButton>
+
+          <template #body>
+            Would you like to verify your email first?
+          </template>
+
+          <template #footer>
+            <UButton type="submit" class="bg-accent text-white hover:bg-accent-dark" @click="handleEmailVerif">
+              Yes
+            </UButton>
+            <NuxtLink to="/dashboard">
+              <UButton type="submit" class="bg-accent text-white hover:bg-accent-dark">
+                No
+              </UButton>
+            </NuxtLink>
+          </template>
+        </UModal>
       </div>
     </UForm>
   </div>

@@ -1,6 +1,6 @@
 <template>
     <UDropdownMenu :items="items">
-        <UButton variant="primary" icon="i-heroicons-user" class="hover:cursor-pointer"/>
+        <UButton variant="primary" icon="i-heroicons-user" class="hover:cursor-pointer"/> 
     </UDropdownMenu>
 </template>
 
@@ -14,7 +14,7 @@ const items = [
     {
         label: 'Reset Password',
         icon: 'i-heroicons-arrow-path',
-        to: '/reset'
+        to: '/dashboard/reset'
     }
 ]
 </script>

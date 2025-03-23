@@ -1,23 +1,37 @@
 <script setup>
 import { loginSchema } from '~/utils/validation'
 
+definePageMeta({
+    layout: 'default'
+})
+
 const state = reactive({
   email: '',
   password: ''
 })
 
 const toast = useToast()
+const config = useRuntimeConfig()
 
 async function onSubmit(event) {
   try {
     const validatedData = loginSchema.parse(state)
 
-    toast.add({
-      title: 'Success',
-      description: 'Login successful',
-      color: 'success',
-      data: validatedData
+    const res = await $fetch(`${config.public.apiBase}/api/login`, {
+      method: 'post',
+      body: validatedData
     })
+
+    if (res.token) {
+      toast.add({
+        title: 'Success',
+        description: 'Login successful',
+        color: 'success',
+        data: validatedData
+      })
+    }
+
+    localStorage.setItem('token', res.token);
 
     navigateTo('/dashboard')
   } catch (error) {
@@ -38,12 +52,14 @@ async function onSubmit(event) {
   <div class="py-4 px-8 flex flex-col bg-container rounded-md shadow-xl">
     <h1 class="xs:text-xl md:text-3xl font-semibold">Login</h1>
     <p class="xs:text-sm md:text-base">Keep it all together and you'll be fine</p>
+
     <span class="text-sm text-secondary mt-2">
-          Don't have an account?
-          <NuxtLink to="/register" class="text-secondary underline">
-            Register
-          </NuxtLink>
-        </span>
+      Don't have an account?
+      <NuxtLink to="/register" class="text-secondary underline">
+        Register
+      </NuxtLink>
+    </span>
+
     <UForm :schema="loginSchema" :state="state" class="space-y-4 mt-4 md:w-96" @submit.prevent="onSubmit">
       <UFormField label="Email" name="email">
         <UInput v-model="state.email" size="lg" class="w-full" />
@@ -53,7 +69,7 @@ async function onSubmit(event) {
           <UInput v-model="state.password" size="lg" type="password" class="w-full"/>
         </UFormField>
 
-        <NuxtLink to="/reset" class="text-secondary text-sm underline">
+        <NuxtLink class="text-secondary text-sm underline">
           Forgot your password?
         </NuxtLink>
 

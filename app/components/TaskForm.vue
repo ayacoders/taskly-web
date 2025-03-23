@@ -2,8 +2,10 @@
 import { useTaskStore } from '../stores/taskStore'
 
 const taskStore = useTaskStore()
+const config = useRuntimeConfig()
+const token = ref(null)
 
-defineProps({
+const props = defineProps({
     action: {
         type: String,
         required: true,
@@ -14,7 +16,8 @@ defineProps({
     },
 })
 
-const emit = defineEmits(['submit', 'close'])
+const emit = defineEmits(['submit'])
+
 const toast = useToast()
 const priorityItems = ref(['Low', 'Medium', 'High'])
 
@@ -25,20 +28,66 @@ const state = reactive({
     priority: '',
 })
 
-const handleSubmit = () => {
+if (props.task) {
+    state.title = props.task.title
+    state.description = props.task.description
+    state.due_date = props.task.due_date
+    state.priority = props.task.priority
+}
+
+
+const handleSubmit = async (token) => {
     try {
-        taskSchema.parse(state)
+        token.value = localStorage.getItem('token') || ''
+        const taskValidated = taskSchema.parse(state)
+        let method = "post"
+        let url = "/api/tasks"
+
+        if (props.action !== "add") {
+            method = 'put'
+            url = `/api/tasks/${props.task.id}`
+        } 
+
+        const { data } = useFetch(`${config.public.apiBase}${url}`, {
+            method,
+            body: JSON.stringify({
+                ...taskValidated, 
+                priority: taskValidated.priority.toLowerCase()
+            }),
+            headers: {
+                Authorization: `Bearer ${token.value}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if(data.error) {
+            toast.add({
+                title: `${props.action === 'add' ? 'Create' : 'Update'} task failed`,
+                description: `Failed to ${props.action === 'add' ? 'create' : 'update'} task`,
+                color: 'error',
+            })
+        } 
         
-        // Use the store to add task
-        taskStore.addTask(state)
+        if(props.action === 'add'){
+            taskStore.addTask(state)
+        } else {
+            taskStore.updateTask(
+                {   
+                    ...state, 
+                    id: props.task.id
+                }
+            )
+        }
         
         toast.add({
             title: 'Success',
-            description: 'Task created successfully',
+            description: `Task ${props.action === 'add' ? 'created' : 'updated'} successfully`,
             color: 'success',
         })
 
-        emit('submit')
+        if(props.action === 'add'){
+            emit('submit')
+        }
         
         Object.assign(state, {
             title: '',
@@ -55,6 +104,7 @@ const handleSubmit = () => {
         })
     }
 }
+
 </script>
 
 <template>
@@ -75,7 +125,7 @@ const handleSubmit = () => {
         <UFormField label="Priority" name="priority" class="w-full">
             <USelect 
                 v-model="state.priority" 
-                :items="priorityItems" 
+                :items="priorityItems"
                 class="w-full"
             />
         </UFormField>

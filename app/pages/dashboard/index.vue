@@ -3,24 +3,58 @@ definePageMeta({
     layout: 'default'
 })
 
-import { useTaskStore } from '../stores/taskStore'
-import { useTaskFiltersStore } from '../stores/taskFilters'
+import { ref, computed, onMounted } from "vue";
+import { useTaskStore } from "#imports";
+import { useTaskFiltersStore } from "#imports";
 
-const taskStore = useTaskStore()
-const taskFilters = useTaskFiltersStore()
-const isMasonryLayout = ref(false)
+const taskStore = useTaskStore();
+const taskFilters = useTaskFiltersStore();
+const isMasonryLayout = ref(false);
+const config = useRuntimeConfig();
+const token = ref("");
+const isModalOpen = ref(false)
+
+if (process.client) {
+    token.value = localStorage.getItem("token") || "";
+}
+
+const handleEmitSubmit = () => {
+    isModalOpen.value = false
+}
+
+onMounted(async () => {
+    try {
+        const { tasks } = await $fetch(`${config.public.apiBase}/api/tasks`, {
+            headers: {
+                Authorization: `Bearer ${token.value}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        
+        if (tasks) {
+            taskStore.resetTasks(tasks);
+        }
+
+
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+    }
+});
 
 const filteredTasks = computed(() => {
-    return taskFilters.filterTasks(taskStore.getAllTasks)
-})
+    return taskFilters.filterTasks(taskStore.getAllTasks);
+});
 
-const updateTask = (updatedTask) => {
-    taskStore.updateTask(updatedTask)
-}
+const updateTask = async (updatedTask) => {
+    console.log("emit shit")
+    taskStore.updateTask(updatedTask);
+};
 
 const toggleLayout = () => {
-    isMasonryLayout.value = !isMasonryLayout.value
-}
+    isMasonryLayout.value = !isMasonryLayout.value;
+};
+
 </script>
 
 <template>
@@ -50,12 +84,13 @@ const toggleLayout = () => {
                     <UModal 
                         title="Add Task"
                         description="Add a new task to your list"
+                        v-modal = "isModalOpen" 
                     >
-                        <UButton @click="isModalOpen = true">Add Task</UButton>
+                        <UButton>Add Task</UButton>
                         <template #body class="w-full">
                             <TaskForm 
                                 action="add"
-                                @submit="handleAddTaskComplete"
+                                @submit="handleEmitSubmit"
                             />
                         </template>
                     </UModal>
@@ -110,6 +145,7 @@ const toggleLayout = () => {
                 >
                     <TaskItem 
                         :task="task" 
+                        
                         @update:task="updateTask"
                     />
                 </div>

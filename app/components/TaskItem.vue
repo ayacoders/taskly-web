@@ -7,11 +7,59 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:task'])
+const taskStore = useTaskStore()
+const config = useRuntimeConfig()
+const toast = useToast()
+const token = ref("");
+
+if (process.client) {
+    token.value = localStorage.getItem('token')
+}
 
 const toggleStatus = () => {
+    const { data } = useFetch(`${config.public.apiBase}/api/tasks/${props.task.id}`, {
+            method: 'put',
+            body: JSON.stringify({
+                ...props.task, 
+                status: !props.task.status,
+                priority: props.task.priority.toLowerCase()
+            }),
+            headers: {
+                Authorization: `Bearer ${token.value}`,
+                'Content-Type': 'application/json'
+            }
+    });
+
     emit('update:task', {
         ...props.task,
         status: !props.task.status
+    })
+}
+
+const handleDelete = () => {
+
+    const { data } = useFetch(`${config.public.apiBase}/api/tasks/${props.task.id}`, {
+        method: 'delete',
+        headers: {
+            Authorization: `Bearer ${token.value}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if(data.error) {
+        toast.add({
+            title: `Delete task failed`,
+            description: `Failed to Delete task`,
+            color: 'error',
+        })
+    } 
+
+    taskStore.deleteTask(props.task.id)
+
+    toast.add({
+        title: 'Success',
+        description: `Task Deleted successfully`,
+        color: 'success',
     })
 }
 </script>
@@ -52,16 +100,34 @@ const toggleStatus = () => {
         <div class="p-3 sm:p-4 flex-shrink-0">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    Due: {{ new Date(task.due_date).toLocaleString() }}
+                    Due: {{ new Date(task.due_date).toLocaleString('en-US', { 
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    }) }}
                 </p>
                 <div class="flex gap-2">
+                    <UModal 
+                        title="Update Task"
+                        description="Update your task"
+                    >
+                        <UButton 
+                            color="gray" 
+                            variant="soft" 
+                            icon="i-heroicons-pencil-square" 
+                            size="sm"
+                        />
+                        
+                        <template #body>
+                            <TaskForm action="update" :task="props.task" />
+                        </template>
+                    </UModal>
+
                     <UButton 
-                        color="gray" 
-                        variant="soft" 
-                        icon="i-heroicons-pencil-square" 
-                        size="sm"
-                    />
-                    <UButton 
+                        @click="handleDelete"
                         color="red" 
                         variant="soft" 
                         icon="i-heroicons-trash" 

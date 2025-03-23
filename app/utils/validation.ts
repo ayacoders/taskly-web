@@ -6,6 +6,7 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
+    name: z.string().min(1, 'Please enter a name'),
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     confirmPassword: z.string()
@@ -21,6 +22,7 @@ export const taskSchema = z.object({
     priority: z.string().min(1, 'Priority is required'),
 });
 
+// to change
 export const resetSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters'),
     password_confirmation: z.string()

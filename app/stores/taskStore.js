@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
-import { test_data } from '../data/dummy'
 
 export const useTaskStore = defineStore('taskStore', {
     state: () => ({
-        tasks: [...test_data] // Create a copy of test_data
+        tasks: [] // Create a copy of test_data
     }),
 
     actions: {
@@ -64,8 +63,8 @@ export const useTaskStore = defineStore('taskStore', {
         },
 
         // Reset to original data
-        resetTasks() {
-            this.tasks = [...test_data]
+        resetTasks(newTask) {
+            this.tasks = [...newTask]
         }
     },
 
