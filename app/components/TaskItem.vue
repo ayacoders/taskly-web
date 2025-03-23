@@ -37,7 +37,7 @@ const toggleStatus = () => {
 }
 
 const handleDelete = () => {
-
+    
     const { data } = useFetch(`${config.public.apiBase}/api/tasks/${props.task.id}`, {
         method: 'delete',
         headers: {

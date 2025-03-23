@@ -111,7 +111,7 @@ async function handleEmailVerif() {
             <UButton type="submit" class="bg-accent text-white hover:bg-accent-dark" @click="handleEmailVerif">
               Yes
             </UButton>
-            <NuxtLink to="/dashboard">
+            <NuxtLink to="/login">
               <UButton type="submit" class="bg-accent text-white hover:bg-accent-dark">
                 No
               </UButton>

@@ -49,7 +49,7 @@ const handleSubmit = async (token) => {
             console.log("id: ", props.task.id)
         } 
 
-        const { data } = useFetch(`${config.public.apiBase}${url}`, {
+        const data = await $fetch(`${config.public.apiBase}${url}`, {
             method,
             body: JSON.stringify({
                 ...taskValidated, 
@@ -61,6 +61,8 @@ const handleSubmit = async (token) => {
             }
         });
 
+        console.log(data)
+
         if(data.error) {
             toast.add({
                 title: `${props.action === 'add' ? 'Create' : 'Update'} task failed`,
@@ -70,11 +72,8 @@ const handleSubmit = async (token) => {
         } 
         
         if(props.action === 'add'){
-            console.log("data", JSON.stringify(data.value, null, 2))
-            taskStore.addTask({
-                ...state, 
-                id: data.value.id
-            })
+            console.log("data", JSON.stringify(data, null, 2))
+            taskStore.addTask(data)
         } else {
             taskStore.updateTask(
                 {   

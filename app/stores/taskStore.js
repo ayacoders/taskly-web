@@ -8,14 +8,8 @@ export const useTaskStore = defineStore('taskStore', {
     actions: {
         // Create a new task
         addTask(task) {
-            const newTask = {
-                ...task,
-                id: Date.now().toString(), // Simple unique ID generation
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            }
-            this.tasks.push(newTask)
-            return newTask
+            this.tasks.push(task)
+            return task
         },
 
         // Read a single task by ID
@@ -29,7 +23,6 @@ export const useTaskStore = defineStore('taskStore', {
             if (index !== -1) {
                 this.tasks[index] = {
                     ...updatedTask,
-                    updated_at: new Date().toISOString()
                 }
                 return true
             }
